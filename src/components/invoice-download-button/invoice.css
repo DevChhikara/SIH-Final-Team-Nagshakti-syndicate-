@@ -1,0 +1,29 @@
+form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 47px;
+    max-width: fit-content;
+    margin-top: 2.9rem;
+}
+.pdf{
+    margin-bottom: 10px;
+    text-decoration: none;
+    background: none;
+}
+.btn{
+    width: 100px;
+    height: 40px;
+    border-radius: 30px;
+    border: 2px solid lightslategrey;
+    background-color: whitesmoke;
+    color: lightslategray;
+    cursor: pointer;
+}
+.btn:hover{
+    animation: ease-in-out 1s  0.2s iteration-1 forwards ;
+    scale: 1.1;
+    background-color: lightslategray;
+    color: whitesmoke;
+
+}

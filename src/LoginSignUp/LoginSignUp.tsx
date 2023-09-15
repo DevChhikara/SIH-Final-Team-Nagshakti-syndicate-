@@ -1,13 +1,23 @@
 import React, { FC } from 'react'
 import './LoginSignUp.css'
+import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { useState } from 'react'
 
 import user_icon from '../assets/images/person.png'
 import email_icon from '../assets/images/email.png'
 import password_icon from '../assets/images/password.png'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
+
+
+
 
 const LoginSignUp = () => { // eslint-disable-line
+    const Alert=(): void =>{
+        alert("USER REGISTERED");
+    }
+
   return (
+    <form>
     <div className='box'>
         <h2 className='header'>Team Syndicate</h2>
         <div className='container'>
@@ -22,7 +32,7 @@ const LoginSignUp = () => { // eslint-disable-line
                 </div>
                 <div className='input'>
                     <img src={email_icon} alt=''></img>
-                    <input type='email' placeholder='E-mail'></input>
+                    <input type='email' placeholder='E-mail' ></input>
                 </div>
                 <div className='input'>
                     <img src={password_icon} alt=''></img>
@@ -30,12 +40,15 @@ const LoginSignUp = () => { // eslint-disable-line
                 </div>
             </div>
             <div className='submit-container'>
-               <div className='submit'>SignUp</div>
-                <Link to='/login'><div className='submit'>Login</div></Link>
+               <Link to='/login'><div className='submit' onClick={Alert}>SignUp</div></Link>
+                <Link to='/enter'><div className='submit'>Login</div></Link>
             </div>
         </div>
+        
     </div>
+    </form>
   )
-}
+  };
+
 
 export default LoginSignUp

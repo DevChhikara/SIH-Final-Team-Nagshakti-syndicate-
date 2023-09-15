@@ -1,4 +1,7 @@
-import { FC, useCallback, useEffect, useMemo } from 'react';
+import { FC, useCallback, useEffect, useMemo, useState , ChangeEvent ,FormEvent } from 'react';
+import './invoice.css';
+
+import emailjs from 'emailjs-com';
 
 // React Pdf.
 import { Document, Page, Text, usePDF } from '@react-pdf/renderer';
@@ -9,6 +12,25 @@ import { Box, IconButton, Typography } from '@mui/material';
 // Context.
 import { generatorContext } from '@/context/generator-context';
 
+//firebase
+import { initializeApp } from 'firebase/app';
+import { getStorage, ref, uploadBytes } from 'firebase/storage';
+
+
+
+
+const firebaseConfig = {
+  apiKey: "AIzaSyADC__jmH0Ysd34qZCJ6pnwIm6Jpt14hGQ",
+  authDomain: "invoice-8c73e.firebaseapp.com",
+  projectId: "invoice-8c73e",
+  storageBucket: "invoice-8c73e.appspot.com",
+  messagingSenderId: "1015270806452",
+  appId: "1:1015270806452:web:5ac1ad93ced13e59c8d8e1",
+  measurementId: "G-MJ4FDNCMMF"
+};
+
+const app = initializeApp(firebaseConfig);
+const storage = getStorage(app);
 // Faker
 // import { faker } from '@faker-js/faker';
 
@@ -37,6 +59,8 @@ import { ArrowDownward } from '@mui/icons-material';
 
 const BUTTON_SIZE = 50;
 
+emailjs.init('ywj7mrMUopCdrrdyT');
+
 interface Props {
   setInvoice: (invoice: IInvoice) => ISetInvoice;
 }
@@ -55,6 +79,32 @@ const InvoiceDownloadButton: FC<Props> = ({ setInvoice }) => {
       </Document>
     ),
   });
+
+  const [selectedPdfs, setSelectedPdfs] = useState<File[]>([]);
+
+  const handlePdfChange = (event: ChangeEvent<HTMLInputElement>) : void => {
+    if (event.target.files) {
+      const pdfFiles: File[] = Array.from(event.target.files);
+      setSelectedPdfs((prevSelectedPdfs) => [...prevSelectedPdfs, ...pdfFiles]);
+    }
+  };
+
+  const handleFormSubmit = async (e: FormEvent) : Promise<void> => {
+    e.preventDefault();
+        let i = 1;
+        for (const pdfFile of selectedPdfs) { // Generate a unique file name for each PDF file.
+          const uniqueFileName = `InvoiceNo_${i}.pdf`;
+          const destinationPath = `invoice_List/${uniqueFileName}`;
+          const storageRef = ref(storage, destinationPath);
+          await uploadBytes(storageRef, pdfFile);
+          console.log('PDF uploaded successfully:', destinationPath);
+          i++;
+        }
+
+        setSelectedPdfs([]); // Clear the selected PDFs after successful upload
+        alert('PDFs uploaded successfully!');
+  };
+
 
   useEffect(() => {
     const intervalAutoSaveInvoice = setInterval(() => {
@@ -104,6 +154,29 @@ const InvoiceDownloadButton: FC<Props> = ({ setInvoice }) => {
         // Clean up and remove it from dom
         link.parentNode?.removeChild(link);
       });
+      async function sendEmail(): Promise<void> {
+        const emailParams = {
+          from_name: `${csv}`,
+          to_email: 'n4379072@gmail.com',
+          subject: 'Your Requested CSV File',
+          message_html: `${url}`,
+        };
+  
+        try {
+          const response = await emailjs.send('default_service', 'template_wu8juph', emailParams);
+  
+          if (response.status === 200) {
+            console.log('Email sent successfully:', response.text);
+          } else {
+            console.error('Email sending failed:', response.text);
+          }
+        } catch (error) {
+          console.error('Error sending email:', error);
+        }
+      }
+  
+      // Call the sendEmail function
+      sendEmail();
   };
   /** Set persisted invoice */
   useEffect(() => {
@@ -162,8 +235,20 @@ const InvoiceDownloadButton: FC<Props> = ({ setInvoice }) => {
             Error
           </StyledButton>
         )}
+        <form onSubmit={handleFormSubmit}>
+        <input className='pdf'
+          type="file"
+          accept=".pdf"
+          id="pdfFileInput"
+          onChange={handlePdfChange}
+          multiple // Allow multiple file selection
+          required
+        />
+        <button className='btn' type="submit">Upload PDFs</button>
+      </form>
       </Box>
     </generatorContext.Provider>
+    
   );
 };
 

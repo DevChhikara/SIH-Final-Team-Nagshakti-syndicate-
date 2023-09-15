@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import './Login.css'
 
 import user_icon from '../assets/images/person.png'
@@ -22,12 +22,12 @@ const Login = () => { // eslint-disable-line
                 </div>
                 <div className='input'>
                     <img src={password_icon} alt=''></img>
-                    <input type='password' placeholder='Password'></input>
+                    <input type='password' placeholder='Password' ></input>
                 </div>
             </div>
             <div className='submit-container'>
                 <Link to='/'><div className='submit'>SignUp</div></Link>
-                <div className='submit'>Login</div>
+                <Link to='/enter'><div className='submit'>Login</div></Link>
             </div>
         </div>
     </div>
