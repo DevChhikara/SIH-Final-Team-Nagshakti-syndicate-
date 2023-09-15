@@ -1,6 +1,4 @@
-# React Simple Invoice Generator
-Team Nagshakti (Syndicate)
-
+# Team Nagshakti (Syndicate)
 Working Prototype Demo Link - https://drive.google.com/file/d/1U--GWJXVzWRD0BB13HWZCjFtuCXU7J9S/view?usp=sharing
 
 SIH Problem Statement PPT - https://docs.google.com/presentation/d/18_OTUfv2W8yNpf0Ml7lBovZWdw6aVVGu/edit?usp=sharing&ouid=109469085907263857050&rtpof=true&sd=true
